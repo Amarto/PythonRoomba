@@ -9,6 +9,16 @@ import numpy as np
 from matplotlib import pyplot as plt
 import matplotlib.animation as animation
 
+MAX_WEIGHT = 1000 #for setting boundaries
+SMALL_WEIGHT = 100 #for obstacle detection
+X_COORD = 30 #coords of robot
+Y_COORD = 30
+WINDOW_SIZE = 50 #for defining robot in frame
+BOX_SIZE = 20 #size of obstacles       
+N_OBSTACLES = 5 #number of obstacles
+MAX_RAND_VAL = 400 #maximum random value for generating obstacle coords
+
+
 class grid():
     def __init__(self,size):
         self.size = size
@@ -37,7 +47,7 @@ class obstacle():
         y1 = self.coor[1][1]
         for i in xrange(x0,x1) :
             for j in xrange(y0,y1):
-                self.grid.set_position(i,j,1000)
+                self.grid.set_position(i,j,MAX_WEIGHT)
                 
     def delete_object(self):
         x0 = self.coor[0][0]
@@ -74,41 +84,44 @@ class sensor():
                     if(x >= i and (i<=(r*np.cos(np.pi/6) +x + epsilon) or i<=(r*np.cos(np.pi/6) +x-epsilon))):
                         #1st quadrant                        
                         if(y<= j and (j<=(r*np.sin(np.pi/6) + y + epsilon) or j<=(r*np.sin(np.pi/6) +j-epsilon))):
-                            self.grid.set_position(i,j, 100)
+                            self.grid.set_position(i,j, SMALL_WEIGHT)
                             if(self.grid.get_position(i,j) > 0):
                                 self.acoustic_axis[0] = 1
                         #2nd quadrant
                         elif(y >= j and (j<=(r*np.sin(np.pi/6) + y + epsilon) or j<=(r*np.sin(np.pi/6) +j-epsilon))):
-                            self.grid.set_position(i,j, 100)
+                            self.grid.set_position(i,j, SMALL_WEIGHT)
                             if(self.grid.get_position(i,j) > 0 ):                            
                                 self.acoustic_axis[1] = 1
                     elif(x<= i and (i<=(r*np.cos(np.pi/6) +x + epsilon) or i<=(r*np.cos(np.pi/6) +x-epsilon))):
                         #3rd quadrant
                         if(y >= j and (j<=(r*np.sin(np.pi/6) + y + epsilon) or j<=(r*np.sin(np.pi/6) +j-epsilon))):
-                            self.grid.set_position(i,j, 100)  
+                            self.grid.set_position(i,j, SMALL_WEIGHT)  
                             if(self.grid.get_position(i,j) > 0 ):
                                 self.acoustic_axis[2] = 1
                         #4th quadrant                        
                         elif(y<= j and (j<=(r*np.sin(np.pi/6) + y + epsilon) or j<=(r*np.sin(np.pi/6) +j-epsilon))):
-                            self.grid.set_position(i,j, 100)
+                            self.grid.set_position(i,j, SMALL_WEIGHT)
                             if(self.grid.get_position(i,j) > 0):
                                 self.acoustic_axis[3] = 1
                         
         return self.acoustic_axis
             
 class robot():
-    def __init__(self,G):
+
+    def __init__(self,G):    
+
         self.grid = G
         self.sensor = sensor(self.grid.size, self.grid)
-        self.coordinates = [30, 30]
-        self.window_size = 50
-        
+        self.coordinates = [X_COORD, Y_COORD]
+        self.window_size = WINDOW_SIZE
     
     def update_robot_grid(self):
+        RADIUS = 10
+        EP = 4        
         x = self.coordinates[0]
         y = self.coordinates[1]
-        r = 10
-        ep = 4
+        r = RADIUS
+        ep = EP
         w = self.draw_window(self.window_size)
         print self.sensor.is_object_in_field_sensor(x, y, r, ep ,w)
     
@@ -121,11 +134,11 @@ class robot():
         yVals = [y0, y1]
         window = [xVals, yVals]
         for i in range (xVals[0], xVals[1]):
-                self.grid.set_position(i,yVals[0], 1000)
-                self.grid.set_position(i,yVals[1], 1000)
+                self.grid.set_position(i,yVals[0], MAX_WEIGHT)
+                self.grid.set_position(i,yVals[1], MAX_WEIGHT)
         for i in range (yVals[0], yVals[1]):
-                self.grid.set_position(xVals[0], i, 1000)
-                self.grid.set_position(xVals[1], i , 1000)
+                self.grid.set_position(xVals[0], i, MAX_WEIGHT)
+                self.grid.set_position(xVals[1], i , MAX_WEIGHT)
         return window
         
     def delete_inside_window(self, window_size):
@@ -146,6 +159,8 @@ class robot():
         self.coordinates[0] += 1
         self.coordinates[1] += 1
         self.update_robot_grid()
+
+
         
 class simulation():
     def __init__(self):
@@ -154,11 +169,11 @@ class simulation():
         self.A = robot(self.grid) 
     def draw_boundaries_of_frame(self):
         for i in range (0, self.size):
-                self.grid.set_position(i,0, 1000)
-                self.grid.set_position(i,self.size-1, 1000)
+                self.grid.set_position(i,0, MAX_WEIGHT)
+                self.grid.set_position(i,self.size-1, MAX_WEIGHT)
         for i in range (0,self.size):
-                self.grid.set_position(0, i, 1000)
-                self.grid.set_position(self.size-1, i , 1000)
+                self.grid.set_position(0, i, MAX_WEIGHT)
+                self.grid.set_position(self.size-1, i , MAX_WEIGHT)
     
     
         
@@ -166,16 +181,16 @@ class simulation():
         self.draw_boundaries_of_frame()
         self.A.update_robot_grid() 
         object_array = []
-        box_size = 20        
-        n_obstacles = 5
+        box_size = BOX_SIZE       
+        n_obstacles = N_OBSTACLES
         
         min_val = box_size
         max_val = self.size - box_size
         for i in range(n_obstacles):
             while True:
-                x0 = (np.random.randint(0, 400))
+                x0 = (np.random.randint(0, MAX_RAND_VAL))
                 x1 = x0+box_size
-                y0 = np.random.randint(0, 400)
+                y0 = np.random.randint(0, MAX_RAND_VAL)
                 y1 = y0+box_size
                 if(x0>min_val and y0 >min_val and x1<max_val and y1 <max_val):
                     break

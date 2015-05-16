@@ -7,7 +7,6 @@ Created on Thu May  7 16:28:52 2015
 
 import numpy as np
 from matplotlib import pyplot as plt
-import matplotlib.animation as animation
 
 MAX_WEIGHT = 1000 #for setting boundaries
 SMALL_WEIGHT = 100 #for obstacle detection
@@ -73,7 +72,7 @@ class sensor():
         x1 = window[0][1]
         y0 = window[1][0]
         y1 = window[1][1]   
-        r = 10
+
         self.acoustic_axis = [0.0 for z in range(4)]
         
         for i in xrange(x0,x1):
@@ -84,26 +83,28 @@ class sensor():
                     if(x >= i and (i<=(r*np.cos(np.pi/6) +x + epsilon) or i<=(r*np.cos(np.pi/6) +x-epsilon))):
                         #1st quadrant                        
                         if(y<= j and (j<=(r*np.sin(np.pi/6) + y + epsilon) or j<=(r*np.sin(np.pi/6) +j-epsilon))):
-                            self.grid.set_position(i,j, SMALL_WEIGHT)
+                           # used for debbugging:
+                            #self.grid.set_position(i,j, SMALL_WEIGHT)
                             if(self.grid.get_position(i,j) > 0):
                                 self.acoustic_axis[0] = 1
                         #2nd quadrant
                         elif(y >= j and (j<=(r*np.sin(np.pi/6) + y + epsilon) or j<=(r*np.sin(np.pi/6) +j-epsilon))):
-                            self.grid.set_position(i,j, SMALL_WEIGHT)
+                            #self.grid.set_position(i,j, SMALL_WEIGHT)
                             if(self.grid.get_position(i,j) > 0 ):                            
                                 self.acoustic_axis[1] = 1
                     elif(x<= i and (i<=(r*np.cos(np.pi/6) +x + epsilon) or i<=(r*np.cos(np.pi/6) +x-epsilon))):
                         #3rd quadrant
                         if(y >= j and (j<=(r*np.sin(np.pi/6) + y + epsilon) or j<=(r*np.sin(np.pi/6) +j-epsilon))):
-                            self.grid.set_position(i,j, SMALL_WEIGHT)  
+                            #self.grid.set_position(i,j, SMALL_WEIGHT)  
                             if(self.grid.get_position(i,j) > 0 ):
                                 self.acoustic_axis[2] = 1
                         #4th quadrant                        
                         elif(y<= j and (j<=(r*np.sin(np.pi/6) + y + epsilon) or j<=(r*np.sin(np.pi/6) +j-epsilon))):
-                            self.grid.set_position(i,j, SMALL_WEIGHT)
+                            #self.grid.set_position(i,j, SMALL_WEIGHT)
                             if(self.grid.get_position(i,j) > 0):
                                 self.acoustic_axis[3] = 1
-                        
+                    self.grid.set_position(i,j, 100+j*10)
+    
         return self.acoustic_axis
             
 class robot():
@@ -120,12 +121,22 @@ class robot():
         EP = 4        
         x = self.coordinates[0]
         y = self.coordinates[1]
+        
         r = RADIUS
-        ep = EP
-        w = self.draw_window(self.window_size)
-        print self.sensor.is_object_in_field_sensor(x, y, r, ep ,w)
+        ep = EP      
+        w = self.update_window(self.window_size,1)
+
+        #because the of the size of box
+        #This sees if anything is in the radius of the robot, but an accuracy 
+        #based on how we increment r, in this case we're incrementing by 3 so it 
+        #see's if anything is in the radius 3 away
+        for i in xrange(5):
+            print self.sensor.is_object_in_field_sensor(x, y, r, ep ,w)
+            ep += 5
+            r += 3
     
-    def draw_window(self, window_size):
+    #specify 0 args to delete window, and non-zero args to draw window
+    def update_window(self, window_size, delete):
         x0 = self.coordinates[0] - window_size/2
         x1 = self.coordinates[0] + window_size/2
         y0 = self.coordinates[1] - window_size/2
@@ -133,13 +144,22 @@ class robot():
         xVals = [x0, x1]
         yVals = [y0, y1]
         window = [xVals, yVals]
-        for i in range (xVals[0], xVals[1]):
-                self.grid.set_position(i,yVals[0], MAX_WEIGHT)
-                self.grid.set_position(i,yVals[1], MAX_WEIGHT)
-        for i in range (yVals[0], yVals[1]):
-                self.grid.set_position(xVals[0], i, MAX_WEIGHT)
-                self.grid.set_position(xVals[1], i , MAX_WEIGHT)
-        return window
+        if(delete != 0):
+            for i in range (xVals[0], xVals[1]):
+                    self.grid.set_position(i,yVals[0], 1000)
+                    self.grid.set_position(i,yVals[1], 1000)
+            for i in range (yVals[0], yVals[1]):
+                    self.grid.set_position(xVals[0], i, 1000)
+                    self.grid.set_position(xVals[1], i , 1000)
+            return window
+        if(delete == 0):
+            for i in range (xVals[0], xVals[1]):
+                    self.grid.set_position(i,yVals[0], 0)
+                    self.grid.set_position(i,yVals[1], 0)
+            for i in range (yVals[0], yVals[1]):
+                    self.grid.set_position(xVals[0], i, 0)
+                    self.grid.set_position(xVals[1], i , 0)
+            return window
         
     def delete_inside_window(self, window_size):
         x0 = self.coordinates[0] - window_size/2
@@ -155,11 +175,13 @@ class robot():
         return window
     
     def move(self):
-        self.delete_inside_window(self.window_size)
-        self.coordinates[0] += 1
-        self.coordinates[1] += 1
+        #deletes the window frame of the robot, so it doesn't see values
+        self.update_window(self.window_size, 0)
+        #moves it somehow, right now just goingin along -1, -1
+        self.coordinates[0] -= 1
+        self.coordinates[1] -= 1
+        #updates the robot grid
         self.update_robot_grid()
-
 
         
 class simulation():
@@ -179,7 +201,7 @@ class simulation():
         
     def run(self):    
         self.draw_boundaries_of_frame()
-        self.A.update_robot_grid() 
+        
         object_array = []
         box_size = BOX_SIZE       
         n_obstacles = N_OBSTACLES
@@ -197,9 +219,12 @@ class simulation():
             ob = obstacle(self.grid, [[x0,x1], [y0,y1]])
             object_array.append(ob)
             ob.place_object()
-    def move(self):
-        self.A.move()
-              
+
+            #place object in the frame of the object, used for debugging            
+        ob = obstacle(self.grid, [[40,60],[40,60]])
+        ob.place_object()
+        self.A.update_robot_grid() 
+            
 
 fig = plt.figure()       
 A = simulation()

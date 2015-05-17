@@ -2,7 +2,7 @@
 """
 Created on Thu May  7 16:28:52 2015
 
-@author: Jaykar_Nayeck
+Jaykar Nayeck and Amarto Rajaram
 """
 
 import numpy as np
@@ -17,6 +17,9 @@ WINDOW_SIZE = 50 #for defining robot in frame
 BOX_SIZE = 20 #size of obstacles       
 N_OBSTACLES = 5 #number of obstacles
 MAX_RAND_VAL = 400 #maximum random value for generating obstacle coords
+RADIUS = 10
+EP = 4 
+GRIDSIZE = 200
 
 
 class grid():
@@ -73,7 +76,7 @@ class sensor():
         x1 = window[0][1]
         y0 = window[1][0]
         y1 = window[1][1]   
-        r = 10
+        r = RADIUS
         self.acoustic_axis = [0.0 for z in range(4)]
         
         for i in xrange(x0,x1):
@@ -110,14 +113,13 @@ class robot():
 
     def __init__(self,G):    
 
-        self.grid = G
+        self.grid = grid(GRIDSIZE) #so now the robot grid is blank-- need to copy relevant portion
+        self.global_grid = G
         self.sensor = sensor(self.grid.size, self.grid)
         self.coordinates = [X_COORD, Y_COORD]
         self.window_size = WINDOW_SIZE
     
-    def update_robot_grid(self):
-        RADIUS = 10
-        EP = 4        
+    def update_robot_grid(self):       
         x = self.coordinates[0]
         y = self.coordinates[1]
         r = RADIUS
@@ -134,11 +136,11 @@ class robot():
         yVals = [y0, y1]
         window = [xVals, yVals]
         for i in range (xVals[0], xVals[1]):
-                self.grid.set_position(i,yVals[0], MAX_WEIGHT)
-                self.grid.set_position(i,yVals[1], MAX_WEIGHT)
+                self.global_grid.set_position(i,yVals[0], MAX_WEIGHT)
+                self.global_grid.set_position(i,yVals[1], MAX_WEIGHT)
         for i in range (yVals[0], yVals[1]):
-                self.grid.set_position(xVals[0], i, MAX_WEIGHT)
-                self.grid.set_position(xVals[1], i , MAX_WEIGHT)
+                self.global_grid.set_position(xVals[0], i, MAX_WEIGHT)
+                self.global_grid.set_position(xVals[1], i , MAX_WEIGHT)
         return window
         
     def delete_inside_window(self, window_size):
@@ -154,11 +156,16 @@ class robot():
                 self.grid.set_position(i,j,0)
         return window
     
+    
     def move(self):
         self.delete_inside_window(self.window_size)
         self.coordinates[0] += 1
         self.coordinates[1] += 1
         self.update_robot_grid()
+        
+        
+class solver:
+    
 
 
         

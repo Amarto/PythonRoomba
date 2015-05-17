@@ -206,14 +206,18 @@ class robot():
         self.delete_robot_in_grid()
 
        #up
-        if(choice == 1):     
+        if(choice == '1'):     
+            self.coordinates[0] += 1
             self.coordinates[1] += 1
-        if(choice == 2):     
+        if(choice == '2'):     
+             self.coordinates[0] -= 1
+             self.coordinates[1] += 1
+        if(choice == '3'):     
+             self.coordinates[0] -= 1
+             self.coordinates[1] -= 1
+        if(choice == '4'):     
+            self.coordinates[1] += 1  
             self.coordinates[1] -= 1
-        if(choice == 2):     
-            self.coordinates[0] -= 1
-        if(choice == 2):     
-            self.coordinates[1] += 1       
 
         #add fucntion draw roomba
 

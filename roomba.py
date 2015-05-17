@@ -197,11 +197,28 @@ class robot():
         return self.choose_next_step(directions)
 
     def choose_next_step(self,directions):
-        sorted(directions) #sort by radius
+        weight = 100
         for r in directions:
             for d in directions[r]:
-                if(d[1] == 0):
-                    return d[0]
+                d = (d[0], d[1] * weight)
+            weight = weight / 2
+         
+        ranked_dirs = {}
+        ranked_dirs['1'] = 0
+        ranked_dirs['2'] = 0
+        ranked_dirs['3'] = 0
+        ranked_dirs['4'] = 0
+        for r in directions:
+            for d in directions[r]:
+                ranked_dirs[d[0]] = ranked_dirs[d[0]] + d[1]
+                 
+        sorted_ranked_dirs = sorted(ranked_dirs)
+        return sorted_ranked_dirs[0]
+                 
+        
+                 
+
+        
             
 
         
@@ -248,7 +265,7 @@ class simulation():
         '''        
         ob = obstacle(self.grid, [[40,60],[40,60]])
         ob.place_object()
-        pos = 4#self.A.check_radii()
+        pos = self.A.check_radii()
         print "Robot's next positon: " + str(pos)
         print "Should be 1,2, or 3"
         ob.delete_object()

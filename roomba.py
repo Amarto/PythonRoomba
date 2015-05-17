@@ -18,6 +18,7 @@ N_OBSTACLES = 5 #number of obstacles
 MAX_RAND_VAL = 400 #maximum random value for generating obstacle coords
 RADIUS = 10
 EP = 4   
+ROBOT_SIZE = 8
 
 class grid():
     def __init__(self,size):
@@ -117,7 +118,17 @@ class robot():
         self.sensor = sensor(self.grid.size, self.grid)
         self.coordinates = [X_COORD, Y_COORD]
         self.window_size = WINDOW_SIZE
+        self.size = ROBOT_SIZE
     
+    def delete_robot_in_grid(self):
+        x0 = self.coor[0] - self.size/2
+        x1 = self.coor[0] + self.size/2
+        y0 = self.coor[1] - self.size/2
+        y1 = self.coor[1] + self.size/2
+        for i in xrange(x0,x1) :
+            for j in xrange(y0,y1):
+                self.grid.set_position(i,j,0)
+        
     def update_robot_grid(self):
         x = self.coordinates[0]
         y = self.coordinates[1]

@@ -214,8 +214,8 @@ class robot():
             for d in directions[r]:
                 ranked_dirs[d[0]] = ranked_dirs[d[0]] + d[1]
                  
-        sorted_ranked_dirs = sorted(ranked_dirs)
-        return sorted_ranked_dirs[0]
+        print ranked_dirs
+        return min(ranked_dirs, key=ranked_dirs.get)
                  
         
                  

@@ -1,8 +1,10 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu May  7 16:28:52 2015
 
-@author: Jaykar_Nayeck
+"""
+PythonRoomba
+
+A simulation of a robot that navigates a room, using sensors to avoid obstacles. 
+
+Jaykar Nayeck and Amarto Rajaram
 """
 
 import numpy as np
@@ -244,8 +246,8 @@ class robot():
         return self.choose_next_step(directions)
 
     def choose_next_step(self,directions):
-        weight = 100
-        for r in directions:
+        weight = 10000
+        for r in sorted(directions):
             for d in directions[r]:
                 d = (d[0], d[1] * weight)
             weight = weight / 2
@@ -258,9 +260,19 @@ class robot():
         for r in directions:
             for d in directions[r]:
                 ranked_dirs[d[0]] = ranked_dirs[d[0]] + d[1]
+                
+        new_dict = {}
+        for k, v in ranked_dirs.iteritems():
+            new_dict.setdefault(v, []).append(k)
+            
+        index = min(new_dict)
+        return new_dict[index][np.random.randint(0, len(new_dict[index]))] 
+        
+        
+            
                  
         #print ranked_dirs
-        return min(ranked_dirs, key=ranked_dirs.get)
+        #return min(ranked_dirs, key=ranked_dirs.get)
                  
         
                  

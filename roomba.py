@@ -201,7 +201,8 @@ class robot():
         
         #get new position
         choice = self.check_radii()
-        #add function delete roomba        
+        #add function delete roomba  
+        self.delete_robot_in_grid()
         #up
         if(choice == 1):     
             self.coordinates[1] += 1
@@ -212,6 +213,7 @@ class robot():
         if(choice == 2):     
             self.coordinates[1] += 1       
         #add fucntion draw roomba
+        self.draw_robot_in_grid
         #updates the robot grid
         self.update_robot_grid()
        

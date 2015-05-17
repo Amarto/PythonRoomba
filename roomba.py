@@ -16,7 +16,8 @@ WINDOW_SIZE = 50 #for defining robot in frame
 BOX_SIZE = 20 #size of obstacles       
 N_OBSTACLES = 5 #number of obstacles
 MAX_RAND_VAL = 400 #maximum random value for generating obstacle coords
-
+RADIUS = 10
+EP = 4   
 
 class grid():
     def __init__(self,size):
@@ -112,13 +113,13 @@ class robot():
     def __init__(self,G):    
 
         self.grid = G
-        self.sensor = sensor(self.grid.size, self.grid)
+        self.private_grid = grid(50)
+        
+        self.sensor = sensor(self.private_grid.size, self.private_grid)
         self.coordinates = [X_COORD, Y_COORD]
         self.window_size = WINDOW_SIZE
     
     def update_robot_grid(self):
-        RADIUS = 10
-        EP = 4        
         x = self.coordinates[0]
         y = self.coordinates[1]
         
@@ -182,6 +183,13 @@ class robot():
         self.coordinates[1] -= 1
         #updates the robot grid
         self.update_robot_grid()
+        
+    def check_radii():
+        
+        
+    def choose_next_step():
+        
+        
 
         
 class simulation():

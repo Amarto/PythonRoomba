@@ -15,7 +15,7 @@ X_COORD = 30 #coords of robot
 Y_COORD = 30
 WINDOW_SIZE = 50 #for defining robot in frame
 BOX_SIZE = 20 #size of obstacles       
-N_OBSTACLES = 5 #number of obstacles
+N_OBSTACLES = 10 #number of obstacles
 MAX_RAND_VAL = 400 #maximum random value for generating obstacle coords
 RADIUS = 10
 EP = 4   
@@ -167,18 +167,18 @@ class robot():
         yVals = [y0, y1]
         window = [xVals, yVals]
         if(delete != 0):
-            for i in range (xVals[0], xVals[1]+1):
+            for i in range (xVals[0], xVals[1]):
                     self.grid.set_position(i,yVals[0], 1000)
                     self.grid.set_position(i,yVals[1], 1000)
-            for i in range (yVals[0], yVals[1]+1):
+            for i in range (yVals[0], yVals[1]):
                     self.grid.set_position(xVals[0], i, 1000)
                     self.grid.set_position(xVals[1], i , 1000)
             self.window =  window
         if(delete == 0):
-            for i in range (xVals[0], xVals[1]+1):
+            for i in range (xVals[0], xVals[1]):
                     self.grid.set_position(i,yVals[0], 0)
                     self.grid.set_position(i,yVals[1], 0)
-            for i in range (yVals[0], yVals[1]+1):
+            for i in range (yVals[0], yVals[1]):
                     self.grid.set_position(xVals[0], i, 0)
                     self.grid.set_position(xVals[1], i , 0)
             self.window =  window

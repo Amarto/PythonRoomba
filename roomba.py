@@ -53,7 +53,7 @@ class obstacle():
         x0 = self.coor[0][0]
         x1 = self.coor[0][1]
         y0 = self.coor[1][0]
-        y1 = self.coor[1][0]
+        y1 = self.coor[1][1]
         for i in xrange(x0,x1) :
             for j in xrange(y0,y1):
                 self.grid.set_position(i,j,0)
@@ -224,13 +224,14 @@ class simulation():
         
     def run(self):    
         self.draw_boundaries_of_frame()
-        
+        '''
         object_array = []
         box_size = BOX_SIZE       
         n_obstacles = N_OBSTACLES
         
         min_val = box_size
         max_val = self.size - box_size
+        
         for i in range(n_obstacles):
             while True:
                 x0 = (np.random.randint(0, MAX_RAND_VAL))
@@ -244,9 +245,17 @@ class simulation():
             ob.place_object()
 
             #place object in the frame of the object, used for debugging            
+        '''        
         ob = obstacle(self.grid, [[40,60],[40,60]])
         ob.place_object()
-        self.A.update_robot_grid() 
+        pos = 4#self.A.check_radii()
+        print "Robot's next positon: " + str(pos)
+        print "Should be 1,2, or 3"
+        ob.delete_object()
+        ob = obstacle(self.grid, [[0,20],[0,20]])
+        ob.place_object()
+        
+        
             
 
 fig = plt.figure()       

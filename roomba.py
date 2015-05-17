@@ -186,7 +186,15 @@ class robot():
 
     def check_radii():
         
+    
     def choose_next_step(directions):
+        sorted(directions) #sort by radius
+        for e in directions:
+            for d in directions[e]:
+                if (d[1] == 0):
+                    return d[0]
+                
+        
         
         
 

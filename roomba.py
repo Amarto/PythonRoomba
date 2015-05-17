@@ -120,6 +120,7 @@ class robot():
         self.coordinates = [X_COORD, Y_COORD]
         self.window_size = WINDOW_SIZE
         self.size = ROBOT_SIZE
+        self.window = None
     
     def draw_robot_in_grid(self):
         x0 = self.coordinates[0] - self.size/2
@@ -166,21 +167,21 @@ class robot():
         yVals = [y0, y1]
         window = [xVals, yVals]
         if(delete != 0):
-            for i in range (xVals[0], xVals[1]):
+            for i in range (xVals[0], xVals[1]+1):
                     self.grid.set_position(i,yVals[0], 1000)
                     self.grid.set_position(i,yVals[1], 1000)
-            for i in range (yVals[0], yVals[1]):
+            for i in range (yVals[0], yVals[1]+1):
                     self.grid.set_position(xVals[0], i, 1000)
                     self.grid.set_position(xVals[1], i , 1000)
-            return window
+            self.window =  window
         if(delete == 0):
-            for i in range (xVals[0], xVals[1]):
+            for i in range (xVals[0], xVals[1]+1):
                     self.grid.set_position(i,yVals[0], 0)
                     self.grid.set_position(i,yVals[1], 0)
-            for i in range (yVals[0], yVals[1]):
+            for i in range (yVals[0], yVals[1]+1):
                     self.grid.set_position(xVals[0], i, 0)
                     self.grid.set_position(xVals[1], i , 0)
-            return window
+            self.window =  window
         
     def delete_inside_window(self, window_size):
         x0 = self.coordinates[0] - window_size/2
@@ -223,19 +224,19 @@ class robot():
 
 
         self.draw_robot_in_grid()
-
+        self.update_window(self.window_size, 1)
         #updates the robot grid
-        self.update_robot_grid()
+        #self.update_robot_grid()
        
     def check_radii(self):
         x = self.coordinates[0]
         y = self.coordinates[1]
         r = RADIUS
         ep = EP
-        w = self.update_window(self.window_size,1)
+        #w = self.update_window(self.window_size,1)
         directions = {}
         for i in xrange(5):
-            directions[i] = [(str(j+1),self.sensor.is_object_in_field_sensor(x, y, r, ep ,w)[j])for j in range(4)]
+            directions[i] = [(str(j+1),self.sensor.is_object_in_field_sensor(x, y, r, ep ,self.window)[j])for j in range(4)]
             ep += 5
             r += 3
         

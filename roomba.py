@@ -123,6 +123,7 @@ class robot():
         self.window_size = WINDOW_SIZE
         self.size = ROBOT_SIZE
         self.window = None
+        self.target = [10,70]
     
     def draw_robot_in_grid(self):
         x0 = self.coordinates[0] - self.size/2
@@ -247,17 +248,17 @@ class robot():
 
     def choose_next_step(self,directions):
         weight = 200
-        target = [10,70]
+        
         for r in sorted(directions):
             for d in directions[r]:
                 d = (d[0], d[1] * weight)
-                if(self.coordinates[0]>=target[0] and self.coordinates[1]>=target[1] and d[0] == '1'):
+                if(self.target[0]>=self.coordinates[0] and self.target[1]>=self.coordinates[1] and d[0] == '1'):
                     d = (d[0], d[1] - 50)
-                if(self.coordinates[0]<=target[0] and self.coordinates[1]>=target[1] and d[0] == '2'):
+                if(self.target[0]<=self.coordinates[0] and self.target[1]>=self.coordinates[1] and d[0] == '2'):
                     d = (d[0], d[1] - 50)
-                if(self.coordinates[0]<=target[0] and self.coordinates[1]<=target[1] and d[0] == '3'):
+                if(self.target[0]<=self.coordinates[0] and self.target[1]<=self.coordinates[1] and d[0] == '3'):
                     d = (d[0], d[1] - 50)
-                if(self.coordinates[0]>=target[0] and self.coordinates[1]<=target[1] and d[0] == '4'):
+                if(self.target[0]>=self.coordinates[0] and self.target[1]<=self.coordinates[1] and d[0] == '4'):
                     d = (d[0], d[1] - 50)
             weight = weight / 8
          

@@ -1,8 +1,10 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu May  7 16:28:52 2015
 
-@author: Jaykar_Nayeck
+"""
+PythonRoomba
+
+A simulation of a robot that navigates a room, using sensors to avoid obstacles. 
+
+Jaykar Nayeck and Amarto Rajaram
 """
 
 import numpy as np

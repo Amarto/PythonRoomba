@@ -183,7 +183,7 @@ class robot():
         #updates the robot grid
         self.update_robot_grid()
         
-   def check_radii(self):
+    def check_radii(self):
         x = self.coordinates[0]
         y = self.coordinates[1]
         r = RADIUS
@@ -197,7 +197,12 @@ class robot():
         return self.choose_next_step(directions)
 
     def choose_next_step(self,directions):
-        pass
+        sorted(directions) #sort by radius
+        for r in directions:
+            for d in directions[r]:
+                if(d[1] == 0):
+                    return d[0]
+            
 
         
 

@@ -183,7 +183,6 @@ class robot():
         #updates the robot grid
         self.update_robot_grid()
         
-
     def check_radii(self):
         x = self.coordinates[0]
         y = self.coordinates[1]
@@ -198,8 +197,32 @@ class robot():
         print directions
         
         return self.choose_next_step(directions)
+
     def choose_next_step(self,directions):
-        pass
+        weight = 100
+        for r in directions:
+            for d in directions[r]:
+                d = (d[0], d[1] * weight)
+            weight = weight / 2
+         
+        ranked_dirs = {}
+        ranked_dirs['1'] = 0
+        ranked_dirs['2'] = 0
+        ranked_dirs['3'] = 0
+        ranked_dirs['4'] = 0
+        for r in directions:
+            for d in directions[r]:
+                ranked_dirs[d[0]] = ranked_dirs[d[0]] + d[1]
+                 
+        sorted_ranked_dirs = sorted(ranked_dirs)
+        return sorted_ranked_dirs[0]
+                 
+        
+                 
+
+        
+            
+
         
 
         

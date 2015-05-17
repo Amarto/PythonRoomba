@@ -122,19 +122,19 @@ class robot():
         self.size = ROBOT_SIZE
     
     def draw_robot_in_grid(self):
-        x0 = self.coor[0] - self.size/2
-        x1 = self.coor[0] + self.size/2
-        y0 = self.coor[1] - self.size/2
-        y1 = self.coor[1] + self.size/2
+        x0 = self.coordinates[0] - self.size/2
+        x1 = self.coordinates[0] + self.size/2
+        y0 = self.coordinates[1] - self.size/2
+        y1 = self.coordinates[1] + self.size/2
         for i in xrange(x0,x1) :
             for j in xrange(y0,y1):
                 self.grid.set_position(i,j,ROBOT_WEIGHT)
         
     def delete_robot_in_grid(self):
-        x0 = self.coor[0] - self.size/2
-        x1 = self.coor[0] + self.size/2
-        y0 = self.coor[1] - self.size/2
-        y1 = self.coor[1] + self.size/2
+        x0 = self.coordinates[0] - self.size/2
+        x1 = self.coordinates[0] + self.size/2
+        y0 = self.coordinates[1] - self.size/2
+        y1 = self.coordinates[1] + self.size/2
         for i in xrange(x0,x1) :
             for j in xrange(y0,y1):
                 self.grid.set_position(i,j,0)
@@ -152,7 +152,7 @@ class robot():
         #based on how we increment r, in this case we're incrementing by 3 so it 
         #see's if anything is in the radius 3 away
         for i in xrange(5):
-            print self.sensor.is_object_in_field_sensor(x, y, r, ep ,w)
+            self.sensor.is_object_in_field_sensor(x, y, r, ep ,w)
             ep += 5
             r += 3
     
@@ -201,9 +201,11 @@ class robot():
         
         #get new position
         choice = self.check_radii()
+
         #add function delete roomba  
         self.delete_robot_in_grid()
-        #up
+
+       #up
         if(choice == 1):     
             self.coordinates[1] += 1
         if(choice == 2):     
@@ -212,8 +214,12 @@ class robot():
             self.coordinates[0] -= 1
         if(choice == 2):     
             self.coordinates[1] += 1       
+
         #add fucntion draw roomba
-        self.draw_robot_in_grid
+
+
+        self.draw_robot_in_grid()
+
         #updates the robot grid
         self.update_robot_grid()
        
@@ -228,7 +234,7 @@ class robot():
             directions[i] = [(str(j+1),self.sensor.is_object_in_field_sensor(x, y, r, ep ,w)[j])for j in range(4)]
             ep += 5
             r += 3
-        print directions
+        
         
         return self.choose_next_step(directions)
 
@@ -248,7 +254,7 @@ class robot():
             for d in directions[r]:
                 ranked_dirs[d[0]] = ranked_dirs[d[0]] + d[1]
                  
-        print ranked_dirs
+        #print ranked_dirs
         return min(ranked_dirs, key=ranked_dirs.get)
                  
         
@@ -277,7 +283,7 @@ class simulation():
         
     def run(self):    
         self.draw_boundaries_of_frame()
-        '''
+        
         object_array = []
         box_size = BOX_SIZE       
         n_obstacles = N_OBSTACLES
@@ -298,19 +304,23 @@ class simulation():
             ob.place_object()
 
             #place object in the frame of the object, used for debugging            
-        '''        
-        ob = obstacle(self.grid, [[40,60],[40,60]])
-        ob.place_object()
-        pos = self.A.check_radii()
-        print "Robot's next positon: " + str(pos)
-        print "Should be 1,2, or 3"
+                
+        #ob = obstacle(self.grid, [[40,60],[40,60]])
+        #ob.place_object()
+        print self.A.coordinates     
+        for i in range(30):
+            self.A.move()
+        print self.A.coordinates  
+        #print "Robot's next positon: " + str(pos)
+        #print "Should be 1,2, or 3"
+        '''
         ob.delete_object()
         ob = obstacle(self.grid, [[0,20],[0,20]])
         ob.place_object()
         pos = self.A.check_radii()
         print "Robot's next positon: " + str(pos)
         print "Should be 1,3, or 4"
-        
+        '''
         
             
 

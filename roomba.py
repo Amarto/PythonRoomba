@@ -10,6 +10,7 @@ from matplotlib import pyplot as plt
 
 MAX_WEIGHT = 1000 #for setting boundaries
 SMALL_WEIGHT = 100 #for obstacle detection
+ROBOT_WEIGHT = 500 #for drawing robot
 X_COORD = 30 #coords of robot
 Y_COORD = 30
 WINDOW_SIZE = 50 #for defining robot in frame
@@ -120,6 +121,15 @@ class robot():
         self.window_size = WINDOW_SIZE
         self.size = ROBOT_SIZE
     
+    def draw_robot_in_grid(self):
+        x0 = self.coor[0] - self.size/2
+        x1 = self.coor[0] + self.size/2
+        y0 = self.coor[1] - self.size/2
+        y1 = self.coor[1] + self.size/2
+        for i in xrange(x0,x1) :
+            for j in xrange(y0,y1):
+                self.grid.set_position(i,j,ROBOT_WEIGHT)
+        
     def delete_robot_in_grid(self):
         x0 = self.coor[0] - self.size/2
         x1 = self.coor[0] + self.size/2

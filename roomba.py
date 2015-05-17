@@ -246,11 +246,20 @@ class robot():
         return self.choose_next_step(directions)
 
     def choose_next_step(self,directions):
-        weight = 10000
+        weight = 200
+        target = [10,70]
         for r in sorted(directions):
             for d in directions[r]:
                 d = (d[0], d[1] * weight)
-            weight = weight / 2
+                if(self.coordinates[0]>=target[0] and self.coordinates[1]>=target[1] and d[0] == '1'):
+                    d = (d[0], d[1] - 50)
+                if(self.coordinates[0]<=target[0] and self.coordinates[1]>=target[1] and d[0] == '2'):
+                    d = (d[0], d[1] - 50)
+                if(self.coordinates[0]<=target[0] and self.coordinates[1]<=target[1] and d[0] == '3'):
+                    d = (d[0], d[1] - 50)
+                if(self.coordinates[0]>=target[0] and self.coordinates[1]<=target[1] and d[0] == '4'):
+                    d = (d[0], d[1] - 50)
+            weight = weight / 8
          
         ranked_dirs = {}
         ranked_dirs['1'] = 0
@@ -325,9 +334,9 @@ class simulation():
         #ob = obstacle(self.grid, [[40,60],[40,60]])
         #ob.place_object()
         print self.A.coordinates     
-        for i in range(30):
+        for i in range(50):
             self.A.move()
-        print self.A.coordinates  
+            print self.A.coordinates  
         #print "Robot's next positon: " + str(pos)
         #print "Should be 1,2, or 3"
         '''

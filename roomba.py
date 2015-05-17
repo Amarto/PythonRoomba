@@ -177,12 +177,23 @@ class robot():
     def move(self):
         #deletes the window frame of the robot, so it doesn't see values
         self.update_window(self.window_size, 0)
-        #moves it somehow, right now just goingin along -1, -1
-        self.coordinates[0] -= 1
-        self.coordinates[1] -= 1
+        
+        #get new position
+        choice = self.check_radii()
+        #add function delete roomba        
+        #up
+        if(choice == 1):     
+            self.coordinates[1] += 1
+        if(choice == 2):     
+            self.coordinates[1] -= 1
+        if(choice == 2):     
+            self.coordinates[0] -= 1
+        if(choice == 2):     
+            self.coordinates[1] += 1       
+        #add fucntion draw roomba
         #updates the robot grid
         self.update_robot_grid()
-        
+       
     def check_radii(self):
         x = self.coordinates[0]
         y = self.coordinates[1]

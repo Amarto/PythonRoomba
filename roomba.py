@@ -81,9 +81,9 @@ class sensor():
                 #if(not((i-x)**2 + (j-y)**2 <= r**2 - epsilon or (i-x)**2 + (j-y)**2 >= r**2 + epsilon)):
                 if(((i-x)**2 + (j-y)**2 <= r**2 + epsilon ) and ((i-x)**2 + (j-y)**2 >= r**2 - epsilon )):
 
-                    if(x >= i and (i<=(r*np.cos(np.pi/6) +x + epsilon) or i<=(r*np.cos(np.pi/6) +x-epsilon))):
+                    if(x >= i and (i<=(r*np.cos(np.pi/6) +x + epsilon) or i<=(r*np.cos(np.pi/4) +x-epsilon))):
                         #1st quadrant                        
-                        if(y<= j and (j<=(r*np.sin(np.pi/6) + y + epsilon) or j<=(r*np.sin(np.pi/6) +j-epsilon))):
+                        if(y<= j and (j<=(r*np.sin(np.pi/6) + y + epsilon) or j<=(r*np.sin(np.pi/4) +j-epsilon))):
                            # used for debbugging:
                             #self.grid.set_position(i,j, SMALL_WEIGHT)
                             if(self.grid.get_position(i,j) > 0):
@@ -104,7 +104,7 @@ class sensor():
                             #self.grid.set_position(i,j, SMALL_WEIGHT)
                             if(self.grid.get_position(i,j) > 0):
                                 self.acoustic_axis[3] = 1
-                    self.grid.set_position(i,j, 100+j*10)
+                    #self.grid.set_position(i,j, 100+j*10)
     
         return self.acoustic_axis
             
@@ -183,19 +183,22 @@ class robot():
         #updates the robot grid
         self.update_robot_grid()
         
+   def check_radii(self):
+        x = self.coordinates[0]
+        y = self.coordinates[1]
+        r = RADIUS
+        ep = EP
+        w = self.update_window(self.window_size,1)
+        directions = {}
+        for i in xrange(5):
+            directions[i] = [(str(j+1),self.sensor.is_object_in_field_sensor(x, y, r, ep ,w)[j])for j in range(4)]
+            ep += 5
+            r += 3
+        return self.choose_next_step(directions)
 
-    def check_radii():
-        
-    
-    def choose_next_step(directions):
-        sorted(directions) #sort by radius
-        for e in directions:
-            for d in directions[e]:
-                if (d[1] == 0):
-                    return d[0]
-                
-        
-        
+    def choose_next_step(self,directions):
+        pass
+
         
 
         

@@ -191,7 +191,7 @@ class robot():
         w = self.update_window(self.window_size,1)
         directions = {}
         for i in xrange(5):
-            directions[r] = [(str(j+1),self.sensor.is_object_in_field_sensor(x, y, r, ep ,w)[j])for j in range(4)]
+            directions[i] = [(str(j+1),self.sensor.is_object_in_field_sensor(x, y, r, ep ,w)[j])for j in range(4)]
             ep += 5
             r += 3
         print directions
@@ -273,9 +273,9 @@ class simulation():
         ob.delete_object()
         ob = obstacle(self.grid, [[0,20],[0,20]])
         ob.place_object()
-        pos = 4#self.A.check_radii()
+        pos = self.A.check_radii()
         print "Robot's next positon: " + str(pos)
-        print "Should be 1,2, or 3"
+        print "Should be 1,3, or 4"
         
         
             

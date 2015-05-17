@@ -113,9 +113,8 @@ class robot():
     def __init__(self,G):    
 
         self.grid = G
-        self.private_grid = grid(50)
         
-        self.sensor = sensor(self.private_grid.size, self.private_grid)
+        self.sensor = sensor(self.grid.size, self.grid)
         self.coordinates = [X_COORD, Y_COORD]
         self.window_size = WINDOW_SIZE
     
@@ -184,10 +183,10 @@ class robot():
         #updates the robot grid
         self.update_robot_grid()
         
+
     def check_radii():
         
-        
-    def choose_next_step():
+    def choose_next_step(directions):
         
         
 
